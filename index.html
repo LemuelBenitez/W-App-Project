@@ -5,13 +5,13 @@
 <head>
     <!-- metas -->
     <meta charset="utf-8">
-    <meta name="author" content="themepaa">
+    <meta name="author" content="Alain">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="keywords" content="Boston - Portfolio Template">
-    <meta name="description" content="Boston - Portfolio Template">
+    <meta name="keywords" content="East Africa Weather Cast">
+    <meta name="description" content="East Africa Weather Cast">
     <!-- title -->
-    <title>Weather</title>
+    <title>East Africa Weather Cast</title>
     <!-- Favicon -->
     <!-- theme css -->
     <link href="assets/css/style.css" rel="stylesheet">
@@ -29,11 +29,20 @@
         <!-- Contact Section -->
         <section data-scroll-index="4" id="contactus" class="section contactus-section">
             <div class="container">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                            <a href="index.html" type="button" class="btn btn-secondary active">Home</a>
+                            <a href="faq.html" type="button" class="btn btn-secondary">FAQs</a>
+                            <a href="subscribe.html" type="button" class="btn btn-secondary">Subscribe</a>
+                        </div>
+                    </div>
+                </div>
                 <div class="row section-heading">
-                    <div class="col-lg-6">
+                    <div class="col-lg-12">
                         <h6><span>Weather</span></h6>
-                        <h3><span>Today</span></h3>
-                        <p>Using open-meteo.com API</p>
+                        <h3><span>East Africa Weather Cast</span></h3>
+                        <p>Real Time Weather Forecast</p>
                     </div>
                 </div>
                 <div class="row">
@@ -68,9 +77,9 @@
                             </li>
                         </ul>
                         <div class="text-center pt-5">
-                            <a href="#"><i class="fab fa-facebook-f"></i></a>
-                            <a href="#"><i class="fab fa-twitter"></i></a>
-                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="https://twitter.com/ShumbushoLN"><i class="fab fa-twitter"></i></a>
+                            &nbsp;&nbsp;
+                            <a href="https://www.linkedin.com/in/alain-shumbusho"><i class="fab fa-linkedin-in"></i></a>
                         </div>
                     </div>
                 </div>
@@ -101,7 +110,7 @@
             const latlong = city.split(',');
             const lat = latlong[0];
             const long = latlong[1];
-            const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&hourly=temperature_2m,rain&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=auto`;
+            const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset,windspeed_10m_max&timezone=auto`;
             $.ajax({
                 url,
                 type : "GET",
@@ -111,8 +120,9 @@
                     console.log(response)
                     $("#result").html(`<li><div class="col"><h5>Temperature</h5><p>Min: ${response.daily.temperature_2m_min[0]}°C     |     Max: ${response.daily.temperature_2m_max[0]}°C  </p></div></li>`)                
                     $("#result").append(`<li><div class="col"><h5>Sunrise & Sunset</h5><p>Sunrise: ${response.daily.sunrise[0].split('T')[1]}     |     Sunset: ${response.daily.sunset[0].split('T')[1]}</p></div></li>`)                    
-                    $("#result").append(`<li><div class="col"><h5>Tomorrow</h5><p>Sunrise: ${response.daily.sunrise[1].split('T')[1]}     |     Sunset: ${response.daily.sunset[1].split('T')[1]}     |     Min: ${response.daily.temperature_2m_min[1]}°C     |     Max: ${response.daily.temperature_2m_max[1]}°C  </p></div></li>`)                    
-                    $("#result").append(`<li><div class="col"><h5>${moment(response.daily.sunrise[2].split('T')[0]).format('dddd, MMMM Do YYYY')}</h5><p>Sunrise: ${response.daily.sunrise[2].split('T')[1]}     |     Sunset: ${response.daily.sunset[2].split('T')[1]}     |     Min: ${response.daily.temperature_2m_min[2]}°C     |     Max: ${response.daily.temperature_2m_max[2]}°C  </p></div></li>`)                    
+                    $("#result").append(`<li><div class="col"><h5>Wind Speed</h5><p>${response.daily.windspeed_10m_max[0]} km/h</p></div></li>`)                    
+                    $("#result").append(`<li><div class="col"><h5>Tomorrow</h5><p style='font-size: 18px'>Sunrise: ${response.daily.sunrise[1].split('T')[1]}     |     Sunset: ${response.daily.sunset[1].split('T')[1]}     |     Min: ${response.daily.temperature_2m_min[1]}°C     |     Max: ${response.daily.temperature_2m_max[1]}°C     |     Wind speed: ${response.daily.windspeed_10m_max[1]} km/h </p></div></li>`)                    
+                    $("#result").append(`<li><div class="col"><h5>${moment(response.daily.sunrise[2].split('T')[0]).format('dddd, MMMM Do YYYY')}</h5><p style='font-size: 18px'>Sunrise: ${response.daily.sunrise[2].split('T')[1]}     |     Sunset: ${response.daily.sunset[2].split('T')[1]}     |     Min: ${response.daily.temperature_2m_min[2]}°C     |     Max: ${response.daily.temperature_2m_max[2]}°C     |     Wind speed: ${response.daily.windspeed_10m_max[2]} km/h </p></div></li>`)                    
                 },
                 error : function(xhr, errorThrown, textStatus){
                     //alert("Error : " + errorThrown + " " + JSON.stringify(xhr) + " " + textStatus);
