@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zxx">
+
+
+<head>
+    <!-- metas -->
+    <meta charset="utf-8">
+    <meta name="author" content="Alain">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="keywords" content="East Africa Weather Cast">
+    <meta name="description" content="East Africa Weather Cast">
+    <!-- title -->
+    <title>East Africa Weather Cast</title>
+    <!-- Favicon -->
+    <!-- theme css -->
+    <link href="assets/css/style.css" rel="stylesheet">
+</head>
+<!-- Body Start -->
+
+<body class="bg-gray">
+    <!-- page loading -->
+    <div id="loading">
+        <div class="load-circle"><span class="one"></span></div>
+    </div>
+    <!-- End -->
+    <!-- Main -->
+    <main class="wrapper">
+        <!-- Contact Section -->
+        <section data-scroll-index="4" id="contactus" class="section contactus-section">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                            <a href="index.html" type="button" class="btn btn-secondary active">Home</a>
+                            <a href="faq.html" type="button" class="btn btn-secondary">FAQs</a>
+                            <a href="subscribe.html" type="button" class="btn btn-secondary">Subscribe</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="row section-heading">
+                    <div class="col-lg-12">
+                        <h6><span>Weather</span></h6>
+                        <h3><span>East Africa Weather Cast</span></h3>
+                        <p>Real Time Weather Forecast</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="contact-form">
+                            <form id="contact-form" method="POST">
+                                <div class="row gx-3 gy-4">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <select name="city" id="city" class="form-control" onchange="citySelected()">
+                                                <option value="City">Choose City</option>
+                                                <option value="-1.95,30.09">Kigali</option>
+                                                <option value="-1.29,36.81">Nairobi</option>
+                                                <option value="0.31,32.58">Kampala</option>
+                                                <option value="-6.80,39.26">Dar es Salaam</option>
+                                                <option value="-3.37,29.36">Bujumbura</option>
+                                                <option value="-4.37,15.30">Kinshasa</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-lg-8">
+                        <ul class="contact-infos" id="result">
+                            <li>
+                                <div class="col">
+                                    <h5></h5>
+                                    <p></p>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="text-center pt-5">
+                            <a href="https://twitter.com/ShumbushoLN"><i class="fab fa-twitter"></i></a>
+                            &nbsp;&nbsp;
+                            <a href="https://www.linkedin.com/in/alain-shumbusho"><i class="fab fa-linkedin-in"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- End Contact Section -->
+        <!-- Effect -->
+        <div class="right-effects"></div>
+        <div class="left-effects"></div>
+        <!-- End Effect -->
+    </main>
+    <!-- Main -->
+    <script src="assets/js/jquery-3.5.1.min.js"></script>
+    <script src="assets/vendor/appear/jquery.appear.js"></script>
+    <script src="assets/vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/vendor/one-page/scrollIt.min.js"></script>
+    <script src="assets/js/custom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <script>
+        function citySelected(){
+            const city = $("#city").val();
+            $("#result").html('<li><div class="col"><h5>Loading...</h5><p></p></div></li>')
+                       
+            if(city === "City"){
+                $("#result").html('<li><div class="col"><h5></h5><p></p></div></li>')
+                return;
+            }
+            const latlong = city.split(',');
+            const lat = latlong[0];
+            const long = latlong[1];
+            const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset,windspeed_10m_max&timezone=auto`;
+            $.ajax({
+                url,
+                type : "GET",
+                cache : false,
+                success : function (html, textStatus){
+                    const response = html;
+                    console.log(response)
+                    $("#result").html(`<li><div class="col"><h5>Temperature</h5><p>Min: ${response.daily.temperature_2m_min[0]}°C     |     Max: ${response.daily.temperature_2m_max[0]}°C  </p></div></li>`)                
+                    $("#result").append(`<li><div class="col"><h5>Sunrise & Sunset</h5><p>Sunrise: ${response.daily.sunrise[0].split('T')[1]}     |     Sunset: ${response.daily.sunset[0].split('T')[1]}</p></div></li>`)                    
+                    $("#result").append(`<li><div class="col"><h5>Wind Speed</h5><p>${response.daily.windspeed_10m_max[0]} km/h</p></div></li>`)                    
+                    $("#result").append(`<li><div class="col"><h5>Tomorrow</h5><p style='font-size: 18px'>Sunrise: ${response.daily.sunrise[1].split('T')[1]}     |     Sunset: ${response.daily.sunset[1].split('T')[1]}     |     Min: ${response.daily.temperature_2m_min[1]}°C     |     Max: ${response.daily.temperature_2m_max[1]}°C     |     Wind speed: ${response.daily.windspeed_10m_max[1]} km/h </p></div></li>`)                    
+                    $("#result").append(`<li><div class="col"><h5>${moment(response.daily.sunrise[2].split('T')[0]).format('dddd, MMMM Do YYYY')}</h5><p style='font-size: 18px'>Sunrise: ${response.daily.sunrise[2].split('T')[1]}     |     Sunset: ${response.daily.sunset[2].split('T')[1]}     |     Min: ${response.daily.temperature_2m_min[2]}°C     |     Max: ${response.daily.temperature_2m_max[2]}°C     |     Wind speed: ${response.daily.windspeed_10m_max[2]} km/h </p></div></li>`)                    
+                },
+                error : function(xhr, errorThrown, textStatus){
+                    //alert("Error : " + errorThrown + " " + JSON.stringify(xhr) + " " + textStatus);
+                }
+            });
+        }
+
+    </script>
+    <!-- end -->
+</body>
+<!-- Body End -->
+
+
+</html>
